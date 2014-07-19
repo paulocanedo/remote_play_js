@@ -1,0 +1,48 @@
+{
+  "name": "remote_play",
+  "description": "Remote play music files",
+  "version": "0.1.0",
+  "homepage": "https://github.com/paulocanedo/remote_play_js",
+  "author": {
+    "name": "Paulo Canedo",
+    "email": "paulocanedo@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/paulocanedo/remote_play_js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paulocanedo/remote_play_js/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/paulocanedo/remote_play_js/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "app/index",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt nodeunit"
+  },
+  "dependencies": {
+    "walk": "~2.3.3",
+    "av": "~0.4.2",
+    "mp3": "~0.1.0",
+    "aac": "~0.1.0",
+    "alac": "~0.1.0",
+    "underscore": "~1.6.0",
+    "taglib": "~0.8.0",
+    "string": "~1.9.0",
+    "connect": "~3.0.2"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.5"
+  },
+  "keywords": []
+}
