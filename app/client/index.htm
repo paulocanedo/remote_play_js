@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" ng-app="remoteplayApp">
+<head>
+  <meta charset="utf-8">
+  <title>Remote Play Client</title>
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script src="bower_components/angularjs/angular.min.js"></script>
+  <script src="js/controllers.js"></script>
+</head>
+<body ng-controller="MusicListCtrl">
+
+  <ul>
+    <li ng-repeat="music in musics">
+      <a href="#" ng-click="requestPlay(music)">{{music.track}} - {{music.title}}</a> ({{(music.duration / 1000 / 60).toFixed(2);}})
+      <p>{{music.artist}} - {{music.album}}</p>
+    </li>
+  </ul>
+
+</body>
+</html>

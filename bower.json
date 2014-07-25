@@ -1,0 +1,27 @@
+{
+  "name": "remote_play_js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/paulocanedo/remote_play_js",
+  "authors": [
+    "Paulo Canedo <paulocanedo@gmail.com>"
+  ],
+  "description": "Remote play",
+  "main": "app/client/index.htm",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "music",
+    "mp3",
+    "m4a",
+    "remote"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
