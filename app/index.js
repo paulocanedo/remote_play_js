@@ -13,35 +13,48 @@
 	var Database = require('../lib/database.js');
 	var Playlist = require('../lib/playlist.js');
 
-	var connect = require('connect');
-	var http    = require('http');
-	var u       = require("util");
-
-	var app = connect();
+	var connect  = require('connect');
+	var fs       = require('fs');
+	var http     = require('http');
+	var u        = require("util");
 
 	var database = Database.db.getInstance('teste');
 	var player   = Player.create();
 	var playlist = Playlist.create();
 
+	var app = connect();
+
 	(function() {
-		playlist.append(database.find(1));
-		playlist.append(database.find(2));
-		playlist.append(database.find(3));
-		playlist.append(database.find(4));
+		database.all().forEach(function(music) {
+			playlist.append(music);
+		});
 
 		player.setPlaylist(playlist);
 	})();
 
 	var executeCommand = function(args) {
 		var command = args[1];
-		var metadata, current_time, playlist_out, list_mfs, volume;
+		var result = {};
 
 		switch(command) {
+			case 'info':
+				result.info = require('../package.json');
+				break;
 			case 'togglePlayback':
 				player.togglePlayback();
 				break;
 			case 'play':
-				player.play();
+				var music_id = args[2];
+				var metadata;
+				if(music_id) {
+					metadata = database.find(music_id);
+				}
+
+				player.stop();
+				player.play(metadata);
+				break;
+			case 'stop':
+				player.stop();
 				break;
 			case 'next':
 				player.next();
@@ -50,8 +63,8 @@
 				player.previous();
 				break;
 			case 'current':
-				metadata = playlist.currentMetadata();
-				current_time = player.currentTime();
+				result.metadata = playlist.currentMetadata();
+				result.metadata.current_time = player.currentTime();
 
 				break;
 			case 'seek':
@@ -63,12 +76,12 @@
 				player.seek(position);
 				break;
 			case 'playlist':
-				playlist_out = playlist.list();
+				result.playlist = playlist.list();
 				break;
 			case 'list_mfs':
 				var path = decodeURIComponent(args.slice(2).join('/'));
 
-				list_mfs = Database.db.list(path);
+				result.list_mfs = Database.db.list_fs(path);
 				break;
 			case 'volume':
 				if(args[2]) {
@@ -80,20 +93,39 @@
 					player.volume(vol);
 				}
 
+				result.volume = player.volume();
+				break;
+			case 'database':
+				var dbname = args[2];
+				var dbcommand = args[3];
 
-				volume = player.volume();
+				if(dbname === undefined || dbname.length === 0) {
+					result.databases = Database.db.list_db();
+				} else {
+					var db = Database.db.getInstance(dbname);
+
+					if(dbcommand === undefined || dbcommand.length === 0) {
+						result.musics = db.all();
+					} else {
+						switch(dbcommand) {
+							case 'append_all':
+								db.append(Database.MUSIC_DIR, function() {db.save();});
+								result.warning = 'this is an async command';
+
+								break;
+							case 'create':
+								result.database_name = dbname;
+								db.save();
+								break;
+						}
+					}
+				}
 				break;
 			default:
 				throw u.format('command not found: %s', command);
 		}
 
-		return {
-			'metadata': metadata,
-			'current_time': current_time,
-			'playlist': playlist_out,
-			'list_mfs': list_mfs,
-			'volume': volume
-		};
+		return result;
 	};
 
 	app.use(function(req, res){
@@ -113,18 +145,28 @@
 
 		result = {
 			'success': success, 
-			'current_time': result.current_time,
-			'metadata': result.metadata, 
-			'playlist': result.playlist,
-			'list_mfs': result.list_mfs,
-			'volume': result.volume,
-			'msg_error': msg_error
+			'msg_error': msg_error,
+			'result': success === true ? result : undefined
 		};
 
-		res.setHeader('content-type', 'application/json');
-		res.end(JSON.stringify(result));
+		if(pathname.indexOf('/client') === 0) {
+			var file = 'app' + pathname;
+			if (pathname[pathname.length-1] === '/') {
+				file += 'index.htm';
+			}
+
+			if(fs.existsSync(file)) {
+				res.end(fs.readFileSync(file));
+			} else {
+				res.end('not found: ' + file);
+			}
+		} else {
+			res.setHeader('content-type', 'application/json');
+			res.end(JSON.stringify(result));
+		}
 	});
 
 	//create node.js http server and listen on port
+	console.log('listening on *:3000');
 	http.createServer(app).listen(3000);
 })();
