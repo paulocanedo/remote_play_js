@@ -49,8 +49,10 @@
 				if(music_id) {
 					metadata = database.find(music_id);
 				}
+				player.genCache(metadata);
 
 				player.stop();
+				playlist.current(metadata);
 				player.play(metadata);
 				break;
 			case 'stop':
@@ -63,7 +65,7 @@
 				player.previous();
 				break;
 			case 'current':
-				result.metadata = playlist.currentMetadata();
+				result.metadata = playlist.current();
 				result.metadata.current_time = player.currentTime();
 
 				break;
@@ -149,7 +151,15 @@
 			'result': success === true ? result : undefined
 		};
 
-		if(pathname.indexOf('/client') === 0) {
+		if(pathname.indexOf('/client/cover_art/') === 0 || pathname.indexOf('/client/lyric/') === 0) {
+			var file = '.cache/' + path_splitted[path_splitted.length-1];
+
+			if(fs.existsSync(file)) {
+				res.end(fs.readFileSync(file));
+			} else {
+				res.end('not found: ' + file);
+			}
+		} else if(pathname.indexOf('/client') === 0) {
 			var file = 'app' + pathname;
 			if (pathname[pathname.length-1] === '/') {
 				file += 'index.htm';

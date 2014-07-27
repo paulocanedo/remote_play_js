@@ -1,3 +1,5 @@
 node_modules
 work
 .sublime-grunt.cache
+.cache
+v8.log
