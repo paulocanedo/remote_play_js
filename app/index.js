@@ -17,6 +17,7 @@
 	var fs       = require('fs');
 	var http     = require('http');
 	var u        = require("util");
+	var _        = require("underscore");
 
 	var database = Database.db.getInstance('teste');
 	var player   = Player.create();
@@ -107,7 +108,7 @@
 					var db = Database.db.getInstance(dbname);
 
 					if(dbcommand === undefined || dbcommand.length === 0) {
-						result.musics = db.all();
+						throw 'database command requires a subcommand: create, musics, albums, artists';
 					} else {
 						switch(dbcommand) {
 							case 'append_all':
@@ -118,6 +119,15 @@
 							case 'create':
 								result.database_name = dbname;
 								db.save();
+								break;
+							case 'musics':
+								result.musics = db.all();
+								break;
+							case 'albums':
+								result.albums = _.groupBy(db.all(), 'album');
+								break;
+							case 'artists':
+								result.artists = _.groupBy(db.all(), 'artist');
 								break;
 						}
 					}

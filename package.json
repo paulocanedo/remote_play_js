@@ -36,7 +36,8 @@
     "underscore": "~1.6.0",
     "taglib": "~0.8.0",
     "string": "~1.9.0",
-    "connect": "~3.0.2"
+    "connect": "~3.0.2",
+    "MD5": "~1.2.1"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",

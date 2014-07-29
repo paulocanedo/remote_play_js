@@ -12,9 +12,8 @@
 
   <ul>
     <li ng-repeat="music in musics">
-      <a href="#/" ng-click="requestPlay(music)">{{music.track}} - {{music.title}}</a> ({{(music.duration / 1000 / 60).toFixed(2);}})
+      <a href="#/" ng-click="requestPlay(music)">{{music.track}} - {{music.title}}</a> ({{music.s_duration}})
       <p>
-        <img ng-src="/client/cover_art/{{music.coverArt}}" width=64 height=64 />
         {{music.artist}} - {{music.album}}
       </p>
     </li>
