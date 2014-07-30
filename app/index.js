@@ -49,12 +49,15 @@
 				var metadata;
 				if(music_id) {
 					metadata = database.find(music_id);
-				}
-				player.genCache(metadata);
+					player.genCache(metadata);
 
-				player.stop();
-				playlist.current(metadata);
-				player.play(metadata);
+					player.stop();
+					playlist.current(metadata);
+					player.play(metadata);
+				} else {
+					player.togglePlayback();
+				}
+
 				break;
 			case 'stop':
 				player.stop();

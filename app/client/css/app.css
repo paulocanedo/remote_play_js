@@ -1,5 +1,7 @@
 #current_music {
 	font-weight: bold;
+	max-width: 420px;
+	max-height: 50px;
 }
 
 .seeker .slider-selection {

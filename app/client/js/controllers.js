@@ -52,8 +52,11 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 
 					$("#current_music").text(metadata.title + ' (' + metadata.album + ')');
 				}
+			}).error(function() {
+				playing = false;
 			});
 		} else {
+			$("#current_music").text('No music playing');
 			clearInterval(intervalFnId);
 			intervalFnId = -1;
 		}
@@ -62,7 +65,8 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 	var startedPlay = function() {
 		playing = true;
 		$("#controlPlay").html('<span class="glyphicon glyphicon-pause"></span>');
-		if(intervalFnId !== -1) {
+
+		if(intervalFnId === -1) {
 			intervalFnId = setInterval(updateData, 1000);
 		}
 	};
@@ -71,20 +75,22 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 		$http.get('/play/' + music.id).success(function(data) {
 			if(data.success) {
 				startedPlay();
-			} else {
-				console.log('fail playing music');
 			}
 		});
 	};
 
-	checkPlaying();
-	setTimeout(function() { if(playing) { startedPlay(); } }, 300);
+	var evt_timestamp = 0;
 	$('#controlSeek').slider({
 		value: 0,
 		enabled: false,
 		formater: function(value) {
 			return 'Music position: ' + value;
 		}
+	}).on('slide', function(evt) {
+		if(evt.timeStamp - evt_timestamp > 1000) {
+			$http.get('/seek/' + evt.value);
+		}
+		evt_timestamp = evt.timeStamp;
 	});
 
 	$("#controlPlay").on('click', function() {
@@ -110,4 +116,7 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 			}
 		});
 	});
+
+	checkPlaying();
+	setTimeout(function() { if(playing) { startedPlay(); } }, 300);
 });
