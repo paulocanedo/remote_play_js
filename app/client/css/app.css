@@ -1,4 +1,28 @@
-.playing {
-	background-color: #cacaca;
-	border: 1px solid black;
+#current_music {
+	font-weight: bold;
+}
+
+.seeker .slider-selection {
+	background: #BABABA;
+}
+
+.ng-table th {
+	text-align: left;
+}
+
+.slider.slider-horizontal {
+	width: 100%;
+	height: 20px;
+}
+
+.jumbotron {
+	background-color: #fff;
+	border: 1px solid #eee;
+}
+
+body {
+	min-height: 2000px;
+	padding-top: 60px;
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: 10;
 }
