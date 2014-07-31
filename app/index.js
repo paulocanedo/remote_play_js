@@ -85,7 +85,8 @@
 				result.playlist = playlist.list();
 				break;
 			case 'list_mfs':
-				var path = decodeURIComponent(args.slice(2).join('/'));
+				var path = args.slice(2).join('/');
+				// var path = decodeURIComponent(args.slice(2).join('/'));
 
 				result.list_mfs = Database.db.list_fs(path);
 				break;
@@ -132,6 +133,9 @@
 							case 'artists':
 								result.artists = _.groupBy(db.all(), 'artist');
 								break;
+							case 'search':
+								result.search = db.search(args[4]);
+								break;
 						}
 					}
 				}
@@ -144,7 +148,7 @@
 	};
 
 	app.use(function(req, res){
-		var pathname = req._parsedUrl.pathname;
+		var pathname = decodeURIComponent(req._parsedUrl.pathname);
 		var path_splitted = pathname.split('/');
 
 		var success = true;

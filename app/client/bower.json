@@ -23,7 +23,9 @@
     "angularjs": "~1.2.21",
     "bootstrap": "~3.2.0",
     "ng-table": "~0.3.3",
-    "seiyria-bootstrap-slider": "~3.1.0"
+    "seiyria-bootstrap-slider": "~3.1.0",
+    "typeahead.js": "git://github.com/twitter/typeahead.js.git#master",
+    "handlebars.runtime-v1.3.0": "http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars.runtime-v1.3.0.js"
   },
   "keywords": [
     "music",

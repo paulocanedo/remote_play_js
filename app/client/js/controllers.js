@@ -8,6 +8,48 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 		$scope.musics = data.result.playlist;
 		data = data.result.playlist;
 
+		$("#searchInput").typeahead({
+			minLength: 1,
+			hint: true,
+			highlight: true
+		},
+		{
+			name: 'musics',
+			displayKey: 'title',
+			source: function(query, process) {
+				$http.get('/database/teste/search/' + query).success(function(data) {
+					process(data.result.search.musics.slice(0, 8));
+				});
+			},
+			templates: {
+				header: '<p class="suggestion_category">Musics</p>',
+			}
+		},
+		{
+			name: 'albums',
+			displayKey: 'album',
+			source: function(query, process) {
+				$http.get('/database/teste/search/' + query).success(function(data) {
+					process(data.result.search.albums.slice(0, 3));
+				});
+			},
+			templates: {
+				header: '<p class="suggestion_category">Albums</p>',
+			}
+		},
+		{
+			name: 'artists',
+			displayKey: 'artist',
+			source: function(query, process) {
+				$http.get('/database/teste/search/' + query).success(function(data) {
+					process(data.result.search.artists.slice(0, 3));
+				});
+			},
+			templates: {
+				header: '<p class="suggestion_category">Artist</p>',
+			}
+		});
+
 		$scope.tableParams = new ngTableParams({
 	        page: 1,            // show first page
 	        count: 500,         // count per page
@@ -65,6 +107,7 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 	var startedPlay = function() {
 		playing = true;
 		$("#controlPlay").html('<span class="glyphicon glyphicon-pause"></span>');
+		// $("#current_music").popover({content: 'Music Title'});
 
 		if(intervalFnId === -1) {
 			intervalFnId = setInterval(updateData, 1000);
