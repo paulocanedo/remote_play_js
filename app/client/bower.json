@@ -1,0 +1,33 @@
+{
+  "name": "remote_play_client",
+  "version": "0.0.1",
+  "homepage": "https://github.com/paulocanedo/remote_play_js",
+  "authors": [
+    "Paulo Canedo <paulocanedo@gmail.com>"
+  ],
+  "description": "Remote Play Client",
+  "main": "index.htm",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.21",
+    "angularjs": "~1.2.21",
+    "bootstrap": "~3.2.0",
+    "ng-table": "~0.3.3",
+    "seiyria-bootstrap-slider": "~3.1.0"
+  },
+  "keywords": [
+    "music",
+    "remote",
+    "mp3"
+  ]
+}
