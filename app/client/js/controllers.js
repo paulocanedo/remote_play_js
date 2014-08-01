@@ -4,9 +4,21 @@ var angular       = angular || null;
 var app = angular.module('remoteplayApp', ['ngTable']);
 
 app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams) {
+	$http.get('/database/teste/albums').success(function(data) {
+
+	});
+
 	$http.get('/playlist').success(function(data) {
 		$scope.musics = data.result.playlist;
 		data = data.result.playlist;
+
+		$scope.requestPlay = function(music) {
+			$http.get('/play/' + music.id).success(function(data) {
+				if(data.success) {
+					startedPlay();
+				}
+			});
+		};		
 
 		$("#searchInput").typeahead({
 			minLength: 1,
@@ -48,6 +60,8 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 			templates: {
 				header: '<p class="suggestion_category">Artist</p>',
 			}
+		}).on('typeahead:selected', function(evt, elem) {
+			$scope.requestPlay(elem);
 		});
 
 		$scope.tableParams = new ngTableParams({
@@ -114,14 +128,6 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 		}
 	};
 
-	$scope.requestPlay = function(music) {
-		$http.get('/play/' + music.id).success(function(data) {
-			if(data.success) {
-				startedPlay();
-			}
-		});
-	};
-
 	var evt_timestamp = 0;
 	$('#controlSeek').slider({
 		value: 0,
@@ -162,4 +168,9 @@ app.controller('MusicListCtrl', function ($scope, $http, $filter, ngTableParams)
 
 	checkPlaying();
 	setTimeout(function() { if(playing) { startedPlay(); } }, 300);
+
+	$('#tabs a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
+    });
 });
