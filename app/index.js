@@ -127,11 +127,18 @@
 							case 'musics':
 								result.musics = db.all();
 								break;
+							case 'album':
+								result.musics = db.musics(undefined, args[4]);
+								break;
 							case 'albums':
-								result.albums = _.groupBy(db.all(), 'album');
+								result.albums = db.albums();
+								break;
+							case 'artist':
+								result.artist_albums = db.musics(args[4], undefined);
 								break;
 							case 'artists':
-								result.artists = _.groupBy(db.all(), 'artist');
+								result.artists = db.artists();
+								database.fetch_artists_fanArt(result.artists);
 								break;
 							case 'search':
 								result.search = db.search(args[4]);
@@ -148,7 +155,13 @@
 	};
 
 	app.use(function(req, res){
+		res.setHeader("Access-Control-Allow-Origin", "*");
+	  	res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+	  	res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+
 		var pathname = decodeURIComponent(req._parsedUrl.pathname);
+	  	console.log(pathname);
+
 		var path_splitted = pathname.split('/');
 
 		var success = true;
@@ -171,11 +184,18 @@
 		if(pathname.indexOf('/client/cover_art/') === 0 || pathname.indexOf('/client/lyric/') === 0) {
 			var file = '.cache/' + path_splitted[path_splitted.length-1];
 
-			if(fs.existsSync(file)) {
-				res.end(fs.readFileSync(file));
-			} else {
-				res.end('not found: ' + file);
+			if(!fs.existsSync(file)) {
+				// var options = { hostname: 'http://www.theaudiodb.com', port: 80, method: 'GET',
+				// 	path: '/api/v1/json/1/searchalbum.php?s=Scorpions&a=Moment of Glory'
+				// };
+				//criar uma entrada /database/teste/{nome_artista}/{album}/cover_art
+				//a partir do md5 do album deve ser possivel chegar aos metadados do mesmo
+
+				res.statusCode = 404;
+				res.end('404 Not found: ' + file);
+				return;
 			}
+			res.end(fs.readFileSync(file));
 		} else if(pathname.indexOf('/client') === 0) {
 			var file = 'app' + pathname;
 			if (pathname[pathname.length-1] === '/') {
@@ -183,6 +203,7 @@
 			}
 
 			if(fs.existsSync(file)) {
+				console.log(file);
 				res.end(fs.readFileSync(file));
 			} else {
 				res.end('not found: ' + file);
@@ -192,6 +213,7 @@
 			res.end(JSON.stringify(result));
 		}
 	});
+
 
 	//create node.js http server and listen on port
 	console.log('listening on *:3000');
