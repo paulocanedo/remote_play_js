@@ -44,6 +44,15 @@
 			case 'togglePlayback':
 				player.togglePlayback();
 				break;
+			case 'stop':
+				player.stop();
+				break;
+			case 'next':
+				player.next();
+				break;
+			case 'previous':
+				player.previous();
+				break;
 			case 'play':
 				var music_id = args[2];
 				var metadata;
@@ -58,16 +67,7 @@
 					player.togglePlayback();
 				}
 
-				break;
-			case 'stop':
-				player.stop();
-				break;
-			case 'next':
-				player.next();
-				break;
-			case 'previous':
-				player.previous();
-				break;
+				// break;
 			case 'current':
 				result.metadata = playlist.current();
 				result.metadata.current_time = player.currentTime();
@@ -203,9 +203,9 @@
 			}
 
 			if(fs.existsSync(file)) {
-				console.log(file);
 				res.end(fs.readFileSync(file));
 			} else {
+				res.statusCode = 404;
 				res.end('not found: ' + file);
 			}
 		} else {
